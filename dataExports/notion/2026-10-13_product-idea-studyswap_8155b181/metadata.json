@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "service": "notion",
+  "id": "3f848ed8-7a9c-813e-8bbf-cd2e8155b181",
+  "title": "Product Idea: StudySwap",
+  "icon": "💡",
+  "url": "https://app.notion.com/p/3f848ed87a9c813e8bbfcd2e8155b181",
+  "parent": {
+    "id": "3f848ed8-7a9c-810b-97e4-f9d94e08e8cd",
+    "title": "Test Data",
+    "url": "https://app.notion.com/p/3f848ed87a9c810b97e4f9d94e08e8cd"
+  },
+  "created_time": "2026-10-13",
+  "created_time_precision": "day",
+  "last_edited_time": "2026-10-13T23:13:45.770Z",
+  "created_by": {
+    "id": "3f8d872b-594c-811e-a0b0-0002261b832d",
+    "name": "AI class"
+  },
+  "downloaded_at": "2026-10-13T23:21:11.134Z",
+  "content_file": "content.md",
+  "download_request": {
+    "mcp_server": "notion",
+    "mcp_server_url": "https://mcp.notion.com/mcp",
+    "tool": "notion-fetch",
+    "arguments": { "id": "3f848ed87a9c813e8bbfcd2e8155b181" },
+    "response_as_of": "2026-10-13T23:13:45.868Z"
+  },
+  "supporting_requests": [
+    {
+      "purpose": "list child pages of the parent",
+      "tool": "notion-fetch",
+      "arguments": { "id": "3f848ed8-7a9c-810b-97e4-f9d94e08e8cd" }
+    },
+    {
+      "purpose": "confirm created date and creator (fetch does not return them)",
+      "tool": "notion-search",
+      "arguments": {
+        "query": "Project Falcon",
+        "page_url": "3f848ed87a9c810b97e4f9d94e08e8cd",
+        "filters": {
+          "created_by_user_ids": ["me"],
+          "created_date_range": { "start_date": "2026-10-13", "end_date": "2026-10-13" }
+        }
+      }
+    },
+    {
+      "purpose": "resolve the 'me' user id and name",
+      "tool": "notion-get-self",
+      "arguments": {}
+    }
+  ]
+}
