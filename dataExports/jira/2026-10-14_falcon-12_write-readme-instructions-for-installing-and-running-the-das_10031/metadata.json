@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "service": "jira",
+  "id": "10031",
+  "key": "FALCON-12",
+  "title": "Write README instructions for installing and running the dashboard locally",
+  "url": "https://aiassistedyu.atlassian.net/browse/FALCON-12",
+  "site": "aiassistedyu.atlassian.net",
+  "cloud_id": "248c3611-13ff-457c-8a82-d282b53025f2",
+  "project": {
+    "id": "10002",
+    "key": "FALCON",
+    "name": "Project Falcon"
+  },
+  "issue_type": "Task",
+  "status": "To Do",
+  "status_category": "To Do",
+  "priority": "Medium",
+  "labels": [
+    "deliverable",
+    "documentation",
+    "onboarding",
+    "readme"
+  ],
+  "components": [],
+  "parent": {
+    "id": "10020",
+    "key": "FALCON-1",
+    "title": "Unified cross-service search dashboard (semester MVP)",
+    "issue_type": "Epic"
+  },
+  "epic_key": "FALCON-1",
+  "reporter": {
+    "id": "712020:8044d6d6-4ee3-4f0d-a7ab-050bd213b19d",
+    "name": "AI class"
+  },
+  "assignee": null,
+  "resolution": null,
+  "resolved_time": null,
+  "comment_count": 0,
+  "created_time": "2026-10-14T01:39:18.506Z",
+  "created_time_precision": "exact",
+  "last_edited_time": "2026-10-14T01:39:18.798Z",
+  "created_by": {
+    "id": "712020:8044d6d6-4ee3-4f0d-a7ab-050bd213b19d",
+    "name": "AI class"
+  },
+  "downloaded_at": "2026-10-14T01:41:47.646Z",
+  "content_file": "content.md",
+  "download_request": {
+    "mcp_server": "atlassian",
+    "mcp_server_url": "https://mcp.atlassian.com/v1/mcp/authv2",
+    "tool": "searchJiraIssuesUsingJql",
+    "arguments": {
+      "cloudId": "248c3611-13ff-457c-8a82-d282b53025f2",
+      "jql": "project = FALCON AND id NOT IN (10020, 10021, 10022, 10023, 10024, 10025, 10026, 10027, 10028, 10029) ORDER BY key ASC",
+      "maxResults": 100,
+      "fields": [
+        "summary",
+        "description",
+        "issuetype",
+        "status",
+        "priority",
+        "labels",
+        "components",
+        "parent",
+        "project",
+        "reporter",
+        "assignee",
+        "creator",
+        "created",
+        "updated",
+        "resolution",
+        "resolutiondate",
+        "comment"
+      ],
+      "responseContentFormat": "markdown"
+    }
+  },
+  "supporting_requests": [
+    {
+      "purpose": "resolve the cloudId of the Jira site",
+      "tool": "getAccessibleAtlassianResources",
+      "arguments": {}
+    }
+  ]
+}
