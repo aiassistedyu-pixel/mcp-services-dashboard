@@ -81,10 +81,10 @@ For each page:
 
 ## 6. Rewrite `index.json`
 
-Never hand-edit `index.json` (no sed, no Edit tool). Rebuild it from **all** `metadata.json` files in `dataExports/notion/`, not only the ones from this run, by running the script next to this skill from the repo root:
+Never hand-edit `index.json` (no sed, no Edit tool). Rebuild it from **all** `metadata.json` files in `dataExports/notion/`, not only the ones from this run, by running the shared script from the repo root:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .claude/skills/download-notion/build-index.ps1 -ExportDir dataExports/notion
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-index.ps1 -ExportDir dataExports/notion
 ```
 
 It writes the shape in `localStorageFormats.md`, sorts by `created_time` then `title` (ordinal), sets `count` and `updated_at`, and stops with an error if two folders share an `id`. If it reports a duplicate, merge the two folders (keep the newer `downloaded_at`) and run it again.

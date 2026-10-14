@@ -4,7 +4,9 @@ How data downloaded from each service is stored under `dataExports/`. The dashbo
 
 - [Common pattern](#common-pattern) — rules every service follows
 - [Notion](#notion) — implemented
-- [Gmail](#gmail) · [Google Drive](#google-drive) · [GitHub](#github) · [Slack](#slack) — planned
+- [Jira](#jira) — implemented
+- [Gmail](#gmail) — not implemented (waived by instructor)
+- [Google Drive](#google-drive) · [GitHub](#github) · [Slack](#slack) — planned
 
 ---
 
@@ -25,7 +27,8 @@ dataExports/
 
 | Rule | Detail |
 |---|---|
-| **Folder name** | `<YYYY-MM-DD>_<title-slug>_<id8>`. The date is the item's creation date (UTC). `id8` is the **last** 8 characters of the service's item ID, with any dashes removed first. (The last characters are used because IDs often share a common prefix.) |
+| **Folder name** | `<YYYY-MM-DD>_<title-slug>_<id8>`. The date is the item's creation date (UTC). `id8` is the **last** 8 characters of the service's item ID, with any dashes removed first, or the whole ID if it is shorter than 8 characters. (The last characters are used because IDs often share a common prefix.) |
+| **Folder name variants** | A service may insert one extra slug part between the date and the title when people search by a short human-readable key, for example `<YYYY-MM-DD>_<key-slug>_<title-slug>_<id8>` for Jira. The first part is still the date and the last part is still `id8`, so code can always read both. Each service section says if it uses a variant. |
 | **Title slug** | Lowercase, ASCII only. Drop apostrophes (`Maria's` → `marias`), turn every other run of non `a-z0-9` characters into one `-`, trim `-` from both ends, and cut at 60 characters (then trim a trailing `-`). Empty result → `untitled`. |
 | **Identity** | The service's item ID is the identity, never the folder name. Before writing, look for an existing `metadata.json` whose `id` matches. If one is found, **update that folder** (rename it if the title or date changed) instead of creating a second one. |
 | **Content file** | `content.md` for text. Start it with `# <title>`, then the body. Use other extensions only for formats that can't become Markdown (for example `content.pdf`). |
@@ -42,7 +45,7 @@ Every service's `metadata.json` contains these fields. Service sections below ad
 | Field | Type | Meaning |
 |---|---|---|
 | `schema_version` | integer | Format version, currently `1`. |
-| `service` | string | `notion`, `gmail`, `gdrive`, `github` or `slack`. |
+| `service` | string | `notion`, `jira`, `gmail`, `gdrive`, `github` or `slack`. |
 | `id` | string | The service's own ID for the item. This is the identity used for updates. |
 | `title` | string | Human-readable title (page title, email subject, file name, issue title…). |
 | `url` | string \| null | Link to open the item in the service. |
@@ -77,6 +80,14 @@ Every service's `metadata.json` contains these fields. Service sections below ad
 | `pages` | array | One entry per item folder. Each entry copies `id`, `title`, `created_time`, `last_edited_time` from that item's `metadata.json` and adds `folder` (the folder name, relative to the service directory). |
 
 The array is called `pages` for every service, so the dashboard can read every index with the same code.
+
+Every service rebuilds its index with the same shared script, run from the repo root:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-index.ps1 -ExportDir dataExports/<service>
+```
+
+It reads every `*/metadata.json`, stops with an error on duplicate `id`s, sorts the entries, and writes `index.json`. It reads only the shared fields, and takes the `service` value from the folder name.
 
 ---
 
@@ -194,19 +205,183 @@ If a later version of the Notion MCP returns exact created times, store them and
 
 ### `index.json`
 
-Uses the [shared shape](#shared-indexjson-shape) with `"service": "notion"`. Rebuild it with:
+Uses the [shared shape](#shared-indexjson-shape) with `"service": "notion"`. Rebuild it with the shared script, passing `-ExportDir dataExports/notion`.
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .claude/skills/download-notion/build-index.ps1 -ExportDir dataExports/notion
+---
+
+## Jira
+
+**Status:** implemented. Skill: `.claude/skills/download-jira/SKILL.md`.
+**Source:** Atlassian Rovo MCP server (`https://mcp.atlassian.com/v1/mcp/authv2`, server name `atlassian` in `.mcp.json`). Content comes from `searchJiraIssuesUsingJql` (or `getJiraIssue` for one issue) with `responseContentFormat: "markdown"`. The skill's `write-issues.ps1` turns the saved response into the files below.
+
+### Layout
+
+```
+dataExports/jira/
+  index.json
+  2026-10-14_falcon-1_unified-cross-service-search-dashboard-semester-mvp_10020/
+    content.md
+    metadata.json
+  2026-10-14_falcon-2_search-returns-duplicate-results-after-syncing-notion-more-t_10021/
+    content.md
+    metadata.json
+  …
 ```
 
-The script reads every `*/metadata.json`, stops with an error on duplicate `id`s, sorts the entries, and writes `index.json`. It only reads the shared fields, so other services can reuse it by passing their own `-ExportDir`.
+### Folder name (variant)
+
+`<created-date>_<key-slug>_<title-slug>_<id8>`. This is the [key variant](#shared-rules) of the common rule, so you can find an issue by its key.
+
+| Part | Source | Example |
+|---|---|---|
+| `created-date` | `created_time` converted to UTC, date only. Jira reports times in the user's offset, so an issue created at 21:25 New York time on Oct 13 is filed under `2026-10-14`. | `2026-10-14` |
+| `key-slug` | issue key, slug rules (lowercase) | `falcon-2` |
+| `title-slug` | issue summary, slug rules (max 60 characters) | `search-returns-duplicate-results-after-syncing-notion-more-t` |
+| `id8` | last 8 characters of the numeric issue ID, or the whole ID when shorter | `10021` |
+
+> **Why the ID and not the key:** keys change when an issue moves to another project; the issue ID does not. The key in the folder name is only there for people to read. Always match by `id` in `metadata.json`. If the key or summary changes, the folder is renamed.
+
+### `content.md`
+
+```
+# <summary>
+
+| Field | Value |
+|---|---|
+| Key | [FALCON-2](https://aiassistedyu.atlassian.net/browse/FALCON-2) |
+| Type | Bug |
+| Status | In Progress |
+| Priority | High |
+| Labels | indexer, notion-connector, … |
+| Epic | FALCON-1 — Unified cross-service search dashboard (semester MVP) |
+| Reporter | AI class |
+| Assignee | Unassigned |
+| Resolution | Unresolved |
+| Created | 2026-10-14T01:25:42.875Z |
+| Updated | 2026-10-14T01:26:21.213Z |
+
+## Description
+
+<full description, Markdown as returned by the MCP server>
+
+## Comments (1)
+
+### <author display name> — <comment created, UTC>
+
+<comment body>
+```
+
+- Line 1 is `# <summary>`.
+- The field table always has the rows shown above. `Parent` (when the parent is not an epic) and `Components` (when there are any) are added after `Epic`. Missing values are written as `None`, `Unassigned` or `Unresolved`.
+- The description is copied unchanged, so its own `##` headings sit at the same level as `## Description`. If there is no description, the section says `_No description._`.
+- All comments, oldest first. With no comments, the section says `_No comments._`.
+
+### `metadata.json` fields
+
+| Field | Type | Example | Notes |
+|---|---|---|---|
+| `schema_version` | integer | `1` | |
+| `service` | string | `"jira"` | |
+| `id` | string | `"10021"` | Jira issue ID (numeric, stored as a string). Identity key. Unique only within one site (see note below). |
+| `key` | string | `"FALCON-2"` | Issue key. Can change if the issue moves. |
+| `title` | string | `"Search returns duplicate results after syncing Notion more than once"` | Issue summary. |
+| `url` | string | `"https://aiassistedyu.atlassian.net/browse/FALCON-2"` | `webUrl` from the response. |
+| `site` | string | `"aiassistedyu.atlassian.net"` | Host of `url`. |
+| `cloud_id` | string | `"248c3611-13ff-457c-8a82-d282b53025f2"` | Atlassian cloud ID used in the request. |
+| `project` | object | `{ "id": "10002", "key": "FALCON", "name": "Project Falcon" }` | |
+| `issue_type` | string | `"Bug"` | `Epic`, `Story`, `Task`, `Bug`, `Subtask`… |
+| `status` | string | `"In Progress"` | Workflow status name. |
+| `status_category` | string \| null | `"In Progress"` | `To Do`, `In Progress` or `Done`. Stable across custom workflows. |
+| `priority` | string \| null | `"High"` | |
+| `labels` | string[] | `["indexer", "search"]` | `[]` if none. |
+| `components` | string[] | `[]` | Component names. |
+| `parent` | object \| null | see below | Direct parent issue (the epic for stories/tasks/bugs, the story for subtasks). `null` for top-level issues. |
+| `parent.id` | string | `"10020"` | |
+| `parent.key` | string | `"FALCON-1"` | |
+| `parent.title` | string | `"Unified cross-service search dashboard (semester MVP)"` | |
+| `parent.issue_type` | string | `"Epic"` | |
+| `epic_key` | string \| null | `"FALCON-1"` | Same as `parent.key` when the parent is an Epic, otherwise `null`. |
+| `reporter` | object \| null | `{ "id": "712020:8044d6d6-…", "name": "AI class" }` | Atlassian account ID and display name. Email addresses are not stored. |
+| `assignee` | object \| null | `null` | Same shape as `reporter`. `null` = unassigned. |
+| `resolution` | string \| null | `"Done"` | `null` while unresolved. |
+| `resolved_time` | string \| null | `"2026-10-14T01:26:19.528Z"` | `resolutiondate`, UTC. |
+| `comment_count` | integer | `1` | Total comments on the issue (from `comment.total`). |
+| `created_time` | string | `"2026-10-14T01:25:42.875Z"` | Jira `created`, converted to UTC. |
+| `created_time_precision` | string | `"exact"` | Always `"exact"` for Jira. |
+| `last_edited_time` | string | `"2026-10-14T01:26:21.213Z"` | Jira `updated`, converted to UTC. |
+| `created_by` | object \| null | `{ "id": "712020:8044d6d6-…", "name": "AI class" }` | Jira `creator` (who created the issue; may differ from `reporter`). |
+| `downloaded_at` | string | `"2026-10-14T01:33:34.488Z"` | |
+| `content_file` | string | `"content.md"` | |
+| `download_request` | object | see example | The `searchJiraIssuesUsingJql` (or `getJiraIssue`) call that returned the issue. The response has no as-of time, so none is stored. |
+| `download_request.mcp_server` | string | `"atlassian"` | |
+| `download_request.mcp_server_url` | string | `"https://mcp.atlassian.com/v1/mcp/authv2"` | |
+| `download_request.tool` | string | `"searchJiraIssuesUsingJql"` | |
+| `download_request.arguments` | object | `{ "cloudId": "…", "jql": "project = FALCON ORDER BY key ASC", … }` | Exact arguments sent. |
+| `supporting_requests` | array | `[{ "purpose": "resolve the cloudId of the Jira site", "tool": "getAccessibleAtlassianResources", "arguments": {} }]` | Plus any user lookups used to build the JQL. |
+
+> **One site per export:** Jira issue IDs are unique within a site, not across sites. `dataExports/jira/` currently holds one site (`aiassistedyu.atlassian.net`). Before downloading from a second site, change `id` to `"<site>:<issue id>"` for every issue so IDs stay unique.
+
+### Example `metadata.json`
+
+```json
+{
+  "schema_version": 1,
+  "service": "jira",
+  "id": "10021",
+  "key": "FALCON-2",
+  "title": "Search returns duplicate results after syncing Notion more than once",
+  "url": "https://aiassistedyu.atlassian.net/browse/FALCON-2",
+  "site": "aiassistedyu.atlassian.net",
+  "cloud_id": "248c3611-13ff-457c-8a82-d282b53025f2",
+  "project": { "id": "10002", "key": "FALCON", "name": "Project Falcon" },
+  "issue_type": "Bug",
+  "status": "In Progress",
+  "status_category": "In Progress",
+  "priority": "High",
+  "labels": ["indexer", "notion-connector", "regression-test", "search", "sqlite-fts5"],
+  "components": [],
+  "parent": { "id": "10020", "key": "FALCON-1", "title": "Unified cross-service search dashboard (semester MVP)", "issue_type": "Epic" },
+  "epic_key": "FALCON-1",
+  "reporter": { "id": "712020:8044d6d6-4ee3-4f0d-a7ab-050bd213b19d", "name": "AI class" },
+  "assignee": null,
+  "resolution": null,
+  "resolved_time": null,
+  "comment_count": 1,
+  "created_time": "2026-10-14T01:25:42.875Z",
+  "created_time_precision": "exact",
+  "last_edited_time": "2026-10-14T01:26:21.213Z",
+  "created_by": { "id": "712020:8044d6d6-4ee3-4f0d-a7ab-050bd213b19d", "name": "AI class" },
+  "downloaded_at": "2026-10-14T01:33:34.488Z",
+  "content_file": "content.md",
+  "download_request": {
+    "mcp_server": "atlassian",
+    "mcp_server_url": "https://mcp.atlassian.com/v1/mcp/authv2",
+    "tool": "searchJiraIssuesUsingJql",
+    "arguments": {
+      "cloudId": "248c3611-13ff-457c-8a82-d282b53025f2",
+      "jql": "project = FALCON ORDER BY key ASC",
+      "maxResults": 100,
+      "fields": ["summary", "description", "issuetype", "status", "priority", "labels", "components", "parent", "project", "reporter", "assignee", "creator", "created", "updated", "resolution", "resolutiondate", "comment"],
+      "responseContentFormat": "markdown"
+    }
+  },
+  "supporting_requests": [
+    { "purpose": "resolve the cloudId of the Jira site", "tool": "getAccessibleAtlassianResources", "arguments": {} }
+  ]
+}
+```
+
+(The script writes every nested object and array on separate lines; it is shown compactly here.)
+
+### `index.json`
+
+Uses the [shared shape](#shared-indexjson-shape) with `"service": "jira"`. `title` is the summary; the key is in `folder`. Rebuild it with the shared script, passing `-ExportDir dataExports/jira`.
 
 ---
 
 ## Gmail
 
-**Status:** planned. Follow the [common pattern](#common-pattern).
+**Status:** not implemented (waived by instructor). Google's official Gmail MCP server rejects every tool call unless the Google Cloud project is enrolled in the Google Workspace Developer Preview Program. The notes below are kept in case Gmail is added later; they follow the [common pattern](#common-pattern).
 
 - One folder per **message**. Date = sent date, title = subject, `id8` = Gmail message ID.
 - `content.md`: subject as `# <subject>`, then the plain-text body. Attachments go in an `attachments/` subfolder.

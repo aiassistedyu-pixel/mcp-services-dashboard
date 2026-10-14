@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "service": "jira",
+  "updated_at": "2026-10-14T01:33:36.486Z",
+  "count": 10,
+  "pages": [
+    {"id": "10020", "title": "Unified cross-service search dashboard (semester MVP)", "folder": "2026-10-14_falcon-1_unified-cross-service-search-dashboard-semester-mvp_10020", "created_time": "2026-10-14T01:24:47.535Z", "last_edited_time": "2026-10-14T01:24:47.656Z"},
+    {"id": "10021", "title": "Search returns duplicate results after syncing Notion more than once", "folder": "2026-10-14_falcon-2_search-returns-duplicate-results-after-syncing-notion-more-t_10021", "created_time": "2026-10-14T01:25:42.875Z", "last_edited_time": "2026-10-14T01:26:21.213Z"},
+    {"id": "10022", "title": "Design SQLite FTS5 schema for the local search index", "folder": "2026-10-14_falcon-3_design-sqlite-fts5-schema-for-the-local-search-index_10022", "created_time": "2026-10-14T01:25:44.117Z", "last_edited_time": "2026-10-14T01:26:21.751Z"},
+    {"id": "10023", "title": "As a student, I want color-coded source badges on search results so I know where each result came from", "folder": "2026-10-14_falcon-4_as-a-student-i-want-color-coded-source-badges-on-search-resu_10023", "created_time": "2026-10-14T01:25:45.248Z", "last_edited_time": "2026-10-14T01:26:20.377Z"},
+    {"id": "10024", "title": "Move the date filter above the source filter in the search sidebar", "folder": "2026-10-14_falcon-5_move-the-date-filter-above-the-source-filter-in-the-search-s_10024", "created_time": "2026-10-14T01:25:46.370Z", "last_edited_time": "2026-10-14T01:25:46.446Z"},
+    {"id": "10025", "title": "Jira connector: download FALCON issues into local storage for indexing", "folder": "2026-10-14_falcon-6_jira-connector-download-falcon-issues-into-local-storage-for_10025", "created_time": "2026-10-14T01:25:47.499Z", "last_edited_time": "2026-10-14T01:26:17.931Z"},
+    {"id": "10026", "title": "Google Drive connector loses table formatting when exporting Google Docs", "folder": "2026-10-14_falcon-7_google-drive-connector-loses-table-formatting-when-exporting_10026", "created_time": "2026-10-14T01:25:48.576Z", "last_edited_time": "2026-10-14T01:26:22.630Z"},
+    {"id": "10027", "title": "Build GitHub connector (README files and issues only)", "folder": "2026-10-14_falcon-8_build-github-connector-readme-files-and-issues-only_10027", "created_time": "2026-10-14T01:25:49.644Z", "last_edited_time": "2026-10-14T01:26:22.231Z"},
+    {"id": "10028", "title": "Record a 3-minute demo video for the final presentation", "folder": "2026-10-14_falcon-9_record-a-3-minute-demo-video-for-the-final-presentation_10028", "created_time": "2026-10-14T01:25:50.894Z", "last_edited_time": "2026-10-14T01:25:50.965Z"},
+    {"id": "10029", "title": "Prepare an offline demo build for the Portland weekend trip", "folder": "2026-10-14_falcon-10_prepare-an-offline-demo-build-for-the-portland-weekend-trip_10029", "created_time": "2026-10-14T01:25:51.958Z", "last_edited_time": "2026-10-14T01:25:52.039Z"}
+  ]
+}

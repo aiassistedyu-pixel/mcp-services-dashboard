@@ -1,7 +1,7 @@
-# Rebuilds <ExportDir>/index.json from every <ExportDir>/*/metadata.json.
-# Format: see localStorageFormats.md ("Shared index.json shape").
-# Usage: powershell -NoProfile -ExecutionPolicy Bypass -File build-index.ps1 [-ExportDir dataExports/notion]
-param([string]$ExportDir = "dataExports/notion")
+# Rebuilds <ExportDir>/index.json from every <ExportDir>/*/metadata.json. Shared by every service.
+# Format: see localStorageFormats.md ("Shared index.json shape"). The service name is the folder name.
+# Usage (from the repo root): powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-index.ps1 -ExportDir dataExports/<service>
+param([Parameter(Mandatory = $true)][string]$ExportDir)
 
 $ErrorActionPreference = "Stop"
 $dir = (Resolve-Path $ExportDir).Path
