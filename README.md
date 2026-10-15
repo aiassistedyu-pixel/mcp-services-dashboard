@@ -22,8 +22,48 @@ All accounts used for this project are throwaway test accounts created specifica
 
 ## Status
 
-Project scaffolding only — accounts, data exports, skill, and dashboard are in progress.
+| Part | Status |
+| --- | --- |
+| Notion | Done. Exported to `dataExports/notion/`, repeatable with the `download-notion` skill |
+| Jira | Done. Exported to `dataExports/jira/`, repeatable with the `download-jira` skill |
+| Dashboard (`webapp/`) | Done. Searches every exported service at once or one at a time |
+| Gmail | Waived by instructor (see above) |
+| GitHub | In progress |
+| Partner's extra service | In progress |
+
+## Who did what
+
+**Me:**
+
+- Notion: MCP connection, data export, and the `download-notion` skill
+- Jira (my extra service): Atlassian MCP connection, data export, and the `download-jira` skill
+- Gmail: the setup attempt (OAuth client, consent screen, sign-in) that led to the waiver
+- The shared local storage format (`localStorageFormats.md`) and the download skills
+- The dashboard (`webapp/`) and its data build script (`scripts/build-dashboard-data.ps1`)
+
+**Partner:**
+
+- GitHub: _TBD_
+- Extra service (_TBD_): _TBD_
 
 ## Running the dashboard
 
-TBD once `webapp/` exists.
+The dashboard in `webapp/` is a local website that searches all downloaded data in `dataExports/` at once (or one service at a time). It is plain HTML/CSS/JavaScript, reads only local files, works offline, and needs nothing installed on Windows or Mac.
+
+**To open it:** double-click `webapp/index.html`. That's it.
+
+**Optional local server (Windows):** from the repo folder run
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File webapp/serve.ps1
+```
+
+It opens `http://localhost:8000/webapp/` in your browser. Press `Ctrl+C` to stop it.
+
+**After every download**, rebuild the dashboard's data file (`webapp/data.js`) and reload the page:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-dashboard-data.ps1
+```
+
+New services (GitHub, a partner's service) show up automatically once their folder follows `localStorageFormats.md` and this script is rerun. Full instructions, search rules and troubleshooting: [`webapp/README.md`](webapp/README.md).
