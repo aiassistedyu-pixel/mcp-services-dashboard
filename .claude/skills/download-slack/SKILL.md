@@ -7,7 +7,7 @@ description: Download Slack channel history through the Slack MCP server (read o
 
 Save Slack messages to `dataExports/slack/` in the format defined in **`localStorageFormats.md`** (repo root, sections "Common pattern" and "Slack"). Read that file first; it is the source of truth for folder names, files and every field. This skill covers *how* to produce that format.
 
-The Slack MCP server is configured in the project's `.mcp.json` (server `slack`, `https://mcp.slack.com/mcp`); it may also be available through the Claude Code Slack plugin. Its tools are named `mcp__plugin_slack_slack__*`.
+The Slack MCP server is configured in the project's `.mcp.json` (server `slack`, `https://mcp.slack.com/mcp`); it may also be available through the Claude Code Slack plugin. Its tools are named `mcp__slack__*` when loaded from `.mcp.json`, or `mcp__plugin_slack_slack__*` via the plugin.
 
 ## Hard rules
 

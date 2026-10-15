@@ -45,6 +45,7 @@ All accounts used for this project are throwaway test accounts created specifica
 
 - GitHub: MCP connection, issue export, and the `download-github` skill
 - Slack (Lior's extra service): MCP connection, channel export, and the `download-slack` skill
+- Slack added to `.mcp.json`
 - Dashboard: GitHub and Slack integration (issue number/state, per-day Slack titles)
 
 ## Running the dashboard
