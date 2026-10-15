@@ -2,6 +2,8 @@
 .env.*
 *.key
 *secret*
+# Export folders are named after item titles (e.g. GitHub issue "Confirm no secrets are committed"); keep them.
+!dataExports/*/*/
 node_modules/
 __pycache__/
 .DS_Store
