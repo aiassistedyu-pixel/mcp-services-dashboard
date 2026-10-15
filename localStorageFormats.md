@@ -489,7 +489,7 @@ Uses the [shared shape](#shared-indexjson-shape) with `"service": "github"`.
 ## Slack
 
 **Status:** implemented. Skill: `.claude/skills/download-slack/SKILL.md`.
-**Source:** official Slack MCP server (`https://mcp.slack.com/mcp`, server name `slack`, installed through the Claude Code Slack plugin rather than `.mcp.json`). Content comes from `slack_read_channel` (and `slack_read_thread` for threads). The skill's `write-channels.ps1` turns the saved responses into the files below.
+**Source:** official Slack MCP server (`https://mcp.slack.com/mcp`, server name `slack` in `.mcp.json`; it may also be available through the Claude Code Slack plugin). Content comes from `slack_read_channel` (and `slack_read_thread` for threads). The skill's `write-channels.ps1` turns the saved responses into the files below.
 
 ### Layout
 
