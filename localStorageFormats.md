@@ -6,7 +6,9 @@ How data downloaded from each service is stored under `dataExports/`. The dashbo
 - [Notion](#notion) — implemented
 - [Jira](#jira) — implemented
 - [Gmail](#gmail) — not implemented (waived by instructor)
-- [Google Drive](#google-drive) · [GitHub](#github) · [Slack](#slack) — planned
+- [GitHub](#github) — implemented (issues)
+- [Slack](#slack) — implemented
+- [Google Drive](#google-drive) — planned
 
 ---
 
@@ -397,16 +399,152 @@ Uses the [shared shape](#shared-indexjson-shape) with `"service": "jira"`. `titl
 
 ## GitHub
 
-**Status:** planned. Follow the [common pattern](#common-pattern).
+**Status:** implemented (issues). Pull requests and files are not exported yet. Skill: `.claude/skills/download-github/SKILL.md`.
+**Source:** official GitHub MCP server (`https://api.githubcopilot.com/mcp/`, server name `github` in `.mcp.json`). Content comes from `search_issues` scoped to one repository (`owner`, `repo`, `query: "is:issue"`). The skill's `write-issues.ps1` turns the saved response into the files below.
 
-- One folder per **issue, pull request or file**. Date = created date, title = issue or PR title (file path for files). `id8` = issue/PR node ID (blob SHA for files).
-- `content.md`: body, then each comment under a `## Comment by <user> — <time>` heading.
-- Likely extra fields: `repo`, `kind` (`issue` \| `pull_request` \| `file`), `number`, `state`, `labels`, `assignees`.
+### Layout
+
+```
+dataExports/github/
+  index.json
+  2026-10-15_mcp-services-dashboard-7_test-7-bug-search-is-case-sensitive_7/
+    content.md
+    metadata.json
+  …
+```
+
+### Folder name (variant)
+
+`<created-date>_<repo-slug>-<number>_<title-slug>_<id8>`, the [key variant](#shared-rules) of the common rule.
+
+| Part | Source | Example |
+|---|---|---|
+| `created-date` | `created_at`, UTC date | `2026-10-15` |
+| `key-slug` | repository name + issue number, slug rules | `mcp-services-dashboard-7` |
+| `title-slug` | issue title, slug rules | `test-7-bug-search-is-case-sensitive` |
+| `id8` | the issue number (always shorter than 8 characters) | `7` |
+
+> **Why not the node ID:** the GitHub MCP server does not return issue node IDs or numeric issue IDs (`issue_read`, `list_issues` and `search_issues` all omit them). The identity is therefore `<owner>/<repo>#<number>`, which is stable unless the repository is renamed or the issue is transferred.
+
+### `content.md`
+
+```
+# <title>
+
+| Field | Value |
+|---|---|
+| Issue | [owner/repo#7](https://github.com/owner/repo/issues/7) |
+| Kind | Issue |
+| State | Open |
+| Labels | None |
+| Assignees | Unassigned |
+| Author | <login> |
+| Created | 2026-10-15T02:52:29.000Z |
+| Updated | 2026-10-15T02:52:29.000Z |
+
+## Description
+
+<issue body, unchanged>
+
+## Comments (<n>)
+
+### Comment by <login> — <created, UTC>
+
+<comment body>
+```
+
+With no body, the description says `_No description._`; with no comments, `_No comments._`. Comments come from `issue_read` with `method: "get_comments"`, oldest first.
+
+### `metadata.json` fields
+
+| Field | Type | Example | Notes |
+|---|---|---|---|
+| `schema_version` | integer | `1` | |
+| `service` | string | `"github"` | |
+| `id` | string | `"aiassistedyu-pixel/mcp-services-dashboard#7"` | `<owner>/<repo>#<number>`. Identity key. |
+| `title` | string | `"[Test 7] Bug: search is case-sensitive"` | |
+| `url` | string | `"https://github.com/aiassistedyu-pixel/mcp-services-dashboard/issues/7"` | `html_url`. |
+| `repo` | string | `"aiassistedyu-pixel/mcp-services-dashboard"` | |
+| `kind` | string | `"issue"` | `issue` \| `pull_request` \| `file`. |
+| `number` | integer | `7` | |
+| `state` | string | `"open"` | `open` or `closed`. |
+| `state_reason` | string \| null | `null` | `completed`, `not_planned`… when the response has it. |
+| `labels` | string[] | `[]` | Label names. |
+| `assignees` | string[] | `[]` | Logins. |
+| `comment_count` | integer | `0` | `comments` from the response. |
+| `closed_time` | string \| null | `null` | `closed_at`, UTC. |
+| `created_time` | string | `"2026-10-15T02:52:29.000Z"` | `created_at`, normalized to milliseconds. |
+| `created_time_precision` | string | `"exact"` | |
+| `last_edited_time` | string | `"2026-10-15T02:52:29.000Z"` | `updated_at`. |
+| `created_by` | object | `{ "id": "342214594", "name": "aiassistedyu-pixel" }` | Numeric user ID (as a string) and login. |
+| `downloaded_at` | string | | |
+| `content_file` | string | `"content.md"` | |
+| `download_request` | object | | The `search_issues` call (`mcp_server: "github"`). The response has no as-of time. |
+| `supporting_requests` | array | | `get_me`, `search_repositories`, `list_issues`, plus any `get_comments` calls. |
+
+### `index.json`
+
+Uses the [shared shape](#shared-indexjson-shape) with `"service": "github"`.
 
 ## Slack
 
-**Status:** planned. Follow the [common pattern](#common-pattern).
+**Status:** implemented. Skill: `.claude/skills/download-slack/SKILL.md`.
+**Source:** official Slack MCP server (`https://mcp.slack.com/mcp`, server name `slack`, installed through the Claude Code Slack plugin rather than `.mcp.json`). Content comes from `slack_read_channel` (and `slack_read_thread` for threads). The skill's `write-channels.ps1` turns the saved responses into the files below.
 
-- One folder per **channel per day** (a single message is too small to be useful on its own). Date = that day, title = `<channel-name>`, `id8` = last 8 characters of the channel ID. Identity for updates = channel ID + date, stored as `id: "<channel_id>:<YYYY-MM-DD>"`.
-- `content.md`: one `**<user>** <time>` line per message, with thread replies indented beneath.
-- Likely extra fields: `channel` (`{ id, name }`), `message_count`, `participants`.
+### Layout
+
+```
+dataExports/slack/
+  index.json
+  2026-10-15_new-channel_93N08NMA/
+    content.md
+    metadata.json
+  …
+```
+
+### Folder name
+
+One folder per **channel per UTC day** (a single message is too small to be useful on its own): `<day>_<channel-name-slug>_<last 8 chars of channel ID>`, for example `2026-10-15_social_91V71LGZ`. Days are UTC, so messages sent at 23:01 New York time on Oct 14 go in the `2026-10-15` folder.
+
+### `content.md`
+
+```
+# <channel-name>
+
+Channel: #<channel-name> (<channel ID>) · <day> (UTC) · <n> messages
+
+**<user>** 2026-10-15T03:01:34.988Z
+<message text>
+
+**<user>** 2026-10-15T03:01:35.204Z
+<message text>
+```
+
+Messages are oldest first. The text is kept as Slack returned it (Slack `*bold*`, `:emoji:` codes and `<@U…|name>` mentions are not converted). Thread replies go beneath their parent, each line indented by two spaces.
+
+### `metadata.json` fields
+
+| Field | Type | Example | Notes |
+|---|---|---|---|
+| `schema_version` | integer | `1` | |
+| `service` | string | `"slack"` | |
+| `id` | string | `"C0C93N08NMA:2026-10-15"` | `<channel ID>:<UTC day>`. Identity key. |
+| `title` | string | `"new-channel"` | Channel name without `#`. |
+| `url` | null | `null` | The MCP responses don't include the workspace URL. |
+| `channel` | object | `{ "id": "C0C93N08NMA", "name": "new-channel" }` | |
+| `date` | string | `"2026-10-15"` | The UTC day. |
+| `message_count` | integer | `3` | Top-level messages that day. |
+| `participants` | array | `[{ "id": "U0C8TQB4V5Z", "name": "AI class" }]` | Everyone who posted, in order of first message. |
+| `messages` | array | `[{ "ts": "1792033294.988709", "user": {…}, "time": "…", "thread_reply_count": 0 }]` | One entry per message; `ts` identifies the message in Slack. |
+| `created_time` | string | `"2026-10-15T03:01:34.988Z"` | Time of the first message that day (from its `ts`). |
+| `created_time_precision` | string | `"exact"` | |
+| `last_edited_time` | string | `"2026-10-15T03:01:35.373Z"` | Time of the last message that day. |
+| `created_by` | null | `null` | A channel-day has no single author; see `participants`. |
+| `downloaded_at` | string | | |
+| `content_file` | string | `"content.md"` | |
+| `download_request` | object | | The `slack_read_channel` call (`mcp_server: "slack"`, `arguments: { "channel_id": … }`). |
+| `supporting_requests` | array | | `slack_list_user_channels`, `slack_read_user_profile`, plus any `slack_read_thread` calls. |
+
+### `index.json`
+
+Uses the [shared shape](#shared-indexjson-shape) with `"service": "slack"`.

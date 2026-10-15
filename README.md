@@ -7,6 +7,7 @@ Course project connecting Claude Code to third-party services via official MCP s
 - **GitHub** — official MCP server (`https://api.githubcopilot.com/mcp/`)
 - **Notion** — official MCP server (`https://mcp.notion.com/mcp`)
 - **Jira** — Atlassian Rovo MCP server (`https://mcp.atlassian.com/v1/mcp/authv2`)
+- **Slack** — official MCP server (`https://mcp.slack.com/mcp`)
 
 **Gmail — not implemented (waived by instructor).** We set up Google's official Gmail MCP server, and the OAuth client, consent screen and sign-in all worked. However, every tool call was rejected, because the Google Cloud project must be enrolled in the Google Workspace Developer Preview Program to use it. The instructor waived Gmail for this project, so it was removed from `.mcp.json`.
 
@@ -25,10 +26,10 @@ All accounts used for this project are throwaway test accounts created specifica
 | --- | --- |
 | Notion | Done. Exported to `dataExports/notion/`, repeatable with the `download-notion` skill |
 | Jira | Done. Exported to `dataExports/jira/`, repeatable with the `download-jira` skill |
-| Dashboard (`webapp/`) | Done. Searches every exported service at once or one at a time |
+| GitHub | Done. Exported to `dataExports/github/`, repeatable with the `download-github` skill |
+| Slack (Lior's extra service) | Done. Exported to `dataExports/slack/`, repeatable with the `download-slack` skill |
+| Dashboard (`webapp/`) | Done. Searches Notion, Jira, GitHub and Slack at once or one at a time |
 | Gmail | Waived by instructor (see above) |
-| GitHub | In progress |
-| Lior's extra service | In progress |
 
 ## Who did what
 
@@ -42,8 +43,9 @@ All accounts used for this project are throwaway test accounts created specifica
 
 **Lior Bongart:**
 
-- GitHub: _TBD_
-- Extra service (_TBD_): _TBD_
+- GitHub: MCP connection, issue export, and the `download-github` skill
+- Slack (Lior's extra service): MCP connection, channel export, and the `download-slack` skill
+- Dashboard: GitHub and Slack integration (issue number/state, per-day Slack titles)
 
 ## Running the dashboard
 

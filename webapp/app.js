@@ -139,6 +139,8 @@
       svc.items.forEach(function (it) {
         var meta = it.metadata || {};
         var title = meta.title || it.folder;
+        // Slack exports are one item per channel per day, so add "#" and the day to tell them apart.
+        if (meta.channel && meta.channel.name && meta.date) title = "#" + meta.channel.name + " · " + formatDate(meta.date);
         var content = it.content || "";
         // Drop the "# <title>" first line; the title is shown separately.
         var body = content.replace(/^﻿?#\s+[^\n]*\n+/, "");
@@ -152,6 +154,9 @@
           service: svc.service,
           folder: it.folder,
           meta: meta,
+          // Short id and status shown next to the badge: Jira key/status, GitHub #number/state.
+          key: meta.key || (meta.number ? "#" + meta.number : ""),
+          status: meta.status || meta.state || "",
           title: title,
           body: body,
           hasContent: it.content !== null && it.content !== undefined,
@@ -260,8 +265,8 @@
     }
     $("results").innerHTML = shown.map(function (x) {
       var it = x.item, m = it.meta;
-      var extra = m.key ? '<span class="key">' + escapeHtml(m.key) + "</span>" : "";
-      var status = m.status ? '<span class="pill">' + escapeHtml(m.status) + "</span>" : "";
+      var extra = it.key ? '<span class="key">' + escapeHtml(it.key) + "</span>" : "";
+      var status = it.status ? '<span class="pill">' + escapeHtml(it.status) + "</span>" : "";
       var link = m.url ? '<a class="orig" href="' + escapeHtml(m.url) + '" target="_blank" rel="noopener noreferrer">Open in ' + escapeHtml(serviceInfo(it.service).name) + " ↗</a>" : "";
       return '<li class="result' + (state.open === it.uid ? " active" : "") + '" data-uid="' + escapeHtml(it.uid) + '">' +
         '<div class="result-head">' + badge(it.service) + extra + status +
@@ -307,7 +312,8 @@
 
     $("detail").innerHTML =
       '<button type="button" class="back" id="back">← Back to results</button>' +
-      '<div class="detail-head">' + badge(it.service) + (m.key ? '<span class="key">' + escapeHtml(m.key) + "</span>" : "") + "</div>" +
+      '<div class="detail-head">' + badge(it.service) + (it.key ? '<span class="key">' + escapeHtml(it.key) + "</span>" : "") +
+        (it.status ? '<span class="pill">' + escapeHtml(it.status) + "</span>" : "") + "</div>" +
       "<h1>" + (m.icon ? escapeHtml(m.icon) + " " : "") + escapeHtml(it.title) + "</h1>" +
       (m.url ? '<p><a class="orig big" href="' + escapeHtml(m.url) + '" target="_blank" rel="noopener noreferrer">Open original in ' + escapeHtml(info.name) + " ↗</a></p>" : "") +
       '<dl class="meta">' + rows.map(function (f) {
