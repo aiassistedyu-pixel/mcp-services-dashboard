@@ -27,7 +27,7 @@ All accounts used for this project are throwaway test accounts created specifica
 | Notion | Done. Exported to `dataExports/notion/`, repeatable with the `download-notion` skill |
 | Jira | Done. Exported to `dataExports/jira/`, repeatable with the `download-jira` skill |
 | GitHub | Done. Exported to `dataExports/github/`, repeatable with the `download-github` skill |
-| Slack (Lior's extra service) | Done. Exported to `dataExports/slack/`, repeatable with the `download-slack` skill |
+| Slack (Lior's extra service) | Done. Exported to `dataExports/slack/`, repeatable with the `download-slack` skill. Slack is stored as one item per channel per day, so the dashboard's 6 Slack items contain 16 messages across 3 channels |
 | Dashboard (`webapp/`) | Done. Searches Notion, Jira, GitHub and Slack at once or one at a time |
 | Gmail | Waived by instructor (see above) |
 
