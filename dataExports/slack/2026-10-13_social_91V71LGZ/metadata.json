@@ -31,7 +31,7 @@
   "created_time_precision": "exact",
   "last_edited_time": "2026-10-13T21:53:04.757Z",
   "created_by": null,
-  "downloaded_at": "2026-10-15T03:35:44.810Z",
+  "downloaded_at": "2026-10-15T21:03:40.136Z",
   "content_file": "content.md",
   "download_request": {
     "mcp_server": "slack",
@@ -49,13 +49,6 @@
       "arguments": {
         "types": "public_channel,private_channel",
         "exclude_archived": true
-      }
-    },
-    {
-      "purpose": "resolve the current user",
-      "tool": "slack_read_user_profile",
-      "arguments": {
-        "response_format": "concise"
       }
     }
   ]

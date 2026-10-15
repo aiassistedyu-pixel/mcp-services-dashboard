@@ -1,6 +1,6 @@
 # all-ai-assisted-yu
 
-Channel: #all-ai-assisted-yu (C0C93MUEF3N) · 2026-10-15 (UTC) · 4 messages
+Channel: #all-ai-assisted-yu (C0C93MUEF3N) · 2026-10-15 (UTC) · 5 messages
 
 **AI class** 2026-10-15T03:01:33.632Z
 Huge shoutout to everyone who helped get the weather dashboard demo working last night :raised_hands: The client loved the 5-day forecast view.
@@ -16,4 +16,8 @@ The office Wi-Fi password changes on the 1st of next month. I'll post the new on
 
 **AI class** 2026-10-15T03:03:03.996Z
 *Team sync moved to Thursday at 2pm* this week because of the holiday on Monday. Same video link as usual.
+*Sent using* Claude
+
+**AI class** 2026-10-15T20:50:55.575Z
+Heads up: Joe Smith is joining Thursday's sync to see the dashboard demo. Please refresh your service exports by Wednesday night so the search shows the latest data.
 *Sent using* Claude
