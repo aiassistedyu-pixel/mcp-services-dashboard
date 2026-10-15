@@ -8,7 +8,7 @@ How data downloaded from each service is stored under `dataExports/`. The dashbo
 - [Gmail](#gmail) — not implemented (waived by instructor)
 - [GitHub](#github) — implemented (issues)
 - [Slack](#slack) — implemented
-- [Google Drive](#google-drive) — planned
+- [Google Drive](#google-drive) — not used
 
 ---
 
@@ -391,7 +391,7 @@ Uses the [shared shape](#shared-indexjson-shape) with `"service": "jira"`. `titl
 
 ## Google Drive
 
-**Status:** planned. Follow the [common pattern](#common-pattern).
+**Status:** not used. The notes below are kept in case Google Drive is added later; they follow the [common pattern](#common-pattern).
 
 - One folder per **file**. Date = created date, title = file name, `id8` = Drive file ID.
 - Google Docs export to `content.md`. Other files keep their own format (`content.pdf`, `content.xlsx`…).
