@@ -1,14 +1,15 @@
 {
   "schema_version": 1,
   "service": "slack",
-  "updated_at": "2026-10-15T21:03:41.291Z",
-  "count": 6,
+  "updated_at": "2026-10-20T20:17:29.395Z",
+  "count": 7,
   "pages": [
     {"id": "C0C93MUEF3N:2026-10-13", "title": "all-ai-assisted-yu", "folder": "2026-10-13_all-ai-assisted-yu_93MUEF3N", "created_time": "2026-10-13T21:53:04.603Z", "last_edited_time": "2026-10-13T21:53:04.603Z"},
     {"id": "C0C91V71LGZ:2026-10-13", "title": "social", "folder": "2026-10-13_social_91V71LGZ", "created_time": "2026-10-13T21:53:04.757Z", "last_edited_time": "2026-10-13T21:53:04.757Z"},
     {"id": "C0C93N08NMA:2026-10-13", "title": "new-channel", "folder": "2026-10-13_new-channel_93N08NMA", "created_time": "2026-10-13T21:54:03.622Z", "last_edited_time": "2026-10-13T21:54:03.622Z"},
     {"id": "C0C93MUEF3N:2026-10-15", "title": "all-ai-assisted-yu", "folder": "2026-10-15_all-ai-assisted-yu_93MUEF3N", "created_time": "2026-10-15T03:01:33.632Z", "last_edited_time": "2026-10-15T20:50:55.575Z"},
     {"id": "C0C91V71LGZ:2026-10-15", "title": "social", "folder": "2026-10-15_social_91V71LGZ", "created_time": "2026-10-15T03:01:34.396Z", "last_edited_time": "2026-10-15T20:50:55.950Z"},
-    {"id": "C0C93N08NMA:2026-10-15", "title": "new-channel", "folder": "2026-10-15_new-channel_93N08NMA", "created_time": "2026-10-15T03:01:34.988Z", "last_edited_time": "2026-10-15T20:50:55.800Z"}
+    {"id": "C0C93N08NMA:2026-10-15", "title": "new-channel", "folder": "2026-10-15_new-channel_93N08NMA", "created_time": "2026-10-15T03:01:34.988Z", "last_edited_time": "2026-10-15T20:50:55.800Z"},
+    {"id": "C0C91V71LGZ:2026-10-20", "title": "social", "folder": "2026-10-20_social_91V71LGZ", "created_time": "2026-10-20T19:50:22.921Z", "last_edited_time": "2026-10-20T19:50:23.096Z"}
   ]
 }
